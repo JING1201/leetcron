@@ -1,5 +1,6 @@
 import browsercookie
 import requests
+import os
 from github import Github
 
 cj = browsercookie.chrome()
@@ -21,7 +22,8 @@ headers = {
 res = requests.get("https://leetcode.com/api/submissions/", headers=headers)
 submissions = res.json()['submissions_dump']
 
-GITHUB_KEY = open('github_key').readline()
+
+GITHUB_KEY = open(os.path.abspath('/Users/jlionwg/Documents/Projects/leetcron/github_key')).readline()
 g = Github(GITHUB_KEY)
 
 repo = g.get_repo("JING1201/Leetcode-Submissions")
