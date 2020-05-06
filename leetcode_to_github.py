@@ -26,7 +26,8 @@ submissions = res.json()['submissions_dump']
 GITHUB_KEY = open(os.path.abspath('/Users/jlionwg/Documents/Projects/leetcron/github_key')).readline()
 g = Github(GITHUB_KEY)
 
-repo = g.get_repo("JING1201/Leetcode-Submissions")
+REPO_NAME = open(os.path.abspath('/Users/jlionwg/Documents/Projects/leetcron/repo_name')).readline()
+repo = g.get_repo(REPO_NAME)
 lang_to_extension = {'python3':'.py'}
 
 for sub in submissions:
