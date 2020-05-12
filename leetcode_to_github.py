@@ -2,44 +2,60 @@ import browsercookie
 import requests
 import os
 from github import Github
+import json
 
-cj = browsercookie.chrome()
-sessionCSRF = ''
-sessionId = ''
+PATH = '/Users/jlionwg/Documents/Projects/leetcron/'
 
-for cookie in cj:
-    if cookie.domain == 'leetcode.com' and cookie.name=='csrftoken':
-        sessionCSRF = cookie.value
-    if cookie.domain == '.leetcode.com' and cookie.name=='LEETCODE_SESSION':
-        sessionId = cookie.value
+with open(PATH+"config.json", "r") as jsonFile:
+    config = json.load(jsonFile)
+
+if not config:
+    print('SOMETHING WENT WRONG')
+    exit()
+
+sessionCSRF = config["LEETCODE_COOKIE"]["sessionCSRF"]
+sessionID = config["LEETCODE_COOKIE"]["sessionID"]
 
 headers = {
-        "Cookie":  'LEETCODE_SESSION=' + sessionId + ';csrftoken=' + sessionCSRF + ';',
+        "Cookie":  'LEETCODE_SESSION=' + sessionID + ';csrftoken=' + sessionCSRF + ';',
         'X-CSRFToken': sessionCSRF,
         'X-Requested-With': 'XMLHttpRequest'
 }
 
 res = requests.get("https://leetcode.com/api/submissions/", headers=headers)
+if 'submissions_dump' not in res.json():
+    print('COULD NOT AUTHENTICATE LEETCODE')
+    exit()
 submissions = res.json()['submissions_dump']
 
+question_timestamps_path = PATH+"question_timestamps.json"
+if os.path.isfile(question_timestamps_path):
+    with open(PATH+"config.json", "r") as jsonFile:
+        question_timestamps = json.load(jsonFile)
+else:
+    question_timestamps = {}
 
-GITHUB_KEY = open(os.path.abspath('/Users/jlionwg/Documents/Projects/leetcron/github_key')).readline()
-g = Github(GITHUB_KEY)
+GITHUB_TOKEN = config["GITHUB"]['token']
+REPO_NAME = condif["GITHUB"]['user']+"/"+config["GITHUB"]['repo']
 
-REPO_NAME = open(os.path.abspath('/Users/jlionwg/Documents/Projects/leetcron/repo_name')).readline()
+g = Github(GITHUB_TOKEN)
+
 repo = g.get_repo(REPO_NAME)
 lang_to_extension = {'python3':'.py'}
 
 for sub in submissions:
-    if sub['status_display'] == 'Accepted':
+    if sub['status_display'] == 'Accepted' and (sub['title'] not in question_timestamps or sub['timestamp'] > question_timestamps[sub['title']]):
         filename = sub['title']+lang_to_extension[sub['lang']]
         try:
             contents = repo.get_contents(filename)
             repo.update_file(contents.path, sub['title']+' '+str(sub['timestamp']), sub['code'], contents.sha)
         except Exception:
             repo.create_file(filename, sub['title']+' '+str(sub['timestamp']), sub['code'])
+        # keep track of timestamp in record
+        question_timestamps[sub['title']] = sub['timestamp']
 
-
+with open(PATH+"question_timestamps.json", "w") as jsonFile:
+    json.dump(question_timestamps, jsonFile)
 
 
 
