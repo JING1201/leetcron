@@ -30,13 +30,13 @@ submissions = res.json()['submissions_dump']
 
 question_timestamps_path = PATH+"question_timestamps.json"
 if os.path.isfile(question_timestamps_path):
-    with open(PATH+"config.json", "r") as jsonFile:
+    with open(PATH+"question_timestamps.json", "r") as jsonFile:
         question_timestamps = json.load(jsonFile)
 else:
     question_timestamps = {}
 
 GITHUB_TOKEN = config["GITHUB"]['token']
-REPO_NAME = condif["GITHUB"]['user']+"/"+config["GITHUB"]['repo']
+REPO_NAME = config["GITHUB"]['username']+"/"+config["GITHUB"]['repo']
 
 g = Github(GITHUB_TOKEN)
 
@@ -53,6 +53,7 @@ for sub in submissions:
             repo.create_file(filename, sub['title']+' '+str(sub['timestamp']), sub['code'])
         # keep track of timestamp in record
         question_timestamps[sub['title']] = sub['timestamp']
+        print(filename, 'uploaded.')
 
 with open(PATH+"question_timestamps.json", "w") as jsonFile:
     json.dump(question_timestamps, jsonFile)

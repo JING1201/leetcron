@@ -22,7 +22,7 @@ def getCookie():
             sessionID = cookie.value
     
     if not sessionCSRF or not sessionID:
-        print('ERROR: Cannot find cookies.')
+        print('ERROR: Cannot find Leetcode cookies.')
         print('Are you sure you are logged into leetcode in Chrome or Firefox?')
         return
     
@@ -34,6 +34,8 @@ def getCookie():
 
     with open(os.path.abspath("config.json"), "w") as jsonFile:
         json.dump(data, jsonFile)
+    
+    print('Leetcode cookies saved.')
 
 def setupGithub():
     """
@@ -106,8 +108,8 @@ def setCronJob():
     if not found:
         job = cron.new(command=sys.executable+" "+os.path.abspath("leetcode_to_github.py"))
 
-    # job.hour.on(0)
-    job.minute.every(2)
+    job.hour.on(0)
+    # job.minute.every(2)
     cron.write()
 
 if __name__ == "__main__":
