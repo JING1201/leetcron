@@ -1,0 +1,11 @@
+{
+    "GITHUB": {
+        "username": "", 
+        "token": "", 
+        "repo": ""
+    }, 
+    "LEETCODE_COOKIE": {
+        "sessionID": "", 
+        "sessionCSRF": ""
+    }
+}

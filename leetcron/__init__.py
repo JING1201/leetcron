@@ -7,6 +7,9 @@ import getpass
 import requests
 from github import Github
 
+PATH, _ = os.path.split(os.path.realpath(__file__))
+PATH += '/'
+
 def getCookie():
     """
     Get cookie of Leetcode session from Chrome or Firefox
@@ -153,6 +156,10 @@ def setCronJob():
     print('Cron job setup successful.')
 
 def setup(option = None):
+    #build config file
+    if not os.path.exists(PATH+'config.json'):
+        os.rename(PATH+'config.example.json', PATH+'config.json')
+    
     options = {
         "-g": setupGithub,
         "-c": getCookie,
@@ -169,20 +176,6 @@ def setup(option = None):
         options[option]()
 
 def run():
-    pass
-
-if __name__ == "__main__":
-
-    functions = {
-        "setup": setup,
-        "run": run
-    }
-
-    if len(sys.argv) >= 2:
-        functions[sys.argv[1]](sys.argv[2] if len(sys.argv) == 3 else None)
-
-
-
-
-
-
+    f = PATH+'leetcode_to_github.py'
+    code = compile(open(f).read(), f, 'exec')
+    exec(code)

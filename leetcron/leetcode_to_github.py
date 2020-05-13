@@ -4,7 +4,8 @@ import os
 from github import Github
 import json
 
-PATH = '/Users/jlionwg/Documents/Projects/leetcron/'
+PATH, _ = os.path.split(os.path.realpath(__file__))
+PATH += '/'
 
 with open(PATH+"config.json", "r") as jsonFile:
     config = json.load(jsonFile)
