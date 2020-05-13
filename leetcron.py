@@ -108,26 +108,78 @@ def setCronJob():
     if not found:
         job = cron.new(command=sys.executable+" "+os.path.abspath("leetcode_to_github.py"))
 
-    job.hour.on(0)
+    time = ['*']*5
+    time[0] = '0'
+    freq = input("How often do you want to run this cron job?\n1. Every hour\n2. Every day\n3. Every week\n4. Every month\n").strip()
+    while not freq.isdigit() or int(freq) > 4 or int(freq) < 1:
+        print('Please input a number between 1 and 4 (inclusive).')
+        freq = input("How often do you want to run this cron job?\n1. Every hour\n2. Every day\n3. Every week\n4. Every month\n").strip()
+    
+    freq = int(freq)
+    if freq == 4:
+        f = input('On what day of the month? (Please enter a number between [1, 31] or press enter if no preference)').strip()
+        while f and (not f.isdigit() or int(f) > 31 or int(freq) < 1):
+            print('Please input a number between 1 and 31 (inclusive).')
+            f = input('On what day of the month? (Please enter a number between [1, 31] or press enter if no preference)').strip()
+        if not f:
+            time[3] = '*/1'
+        else:
+            time[2] = f
+    if freq == 3:
+        f = input('On what day of the week? (Please enter a number between [1, 7] or press enter if no preference)').strip()
+        while f and (not f.isdigit() or int(f) > 31 or int(freq) < 1):
+            print('Please input a number between 1 and 7 (inclusive).')
+            f = input('On what day of the week? (Please enter a number between [1, 7] or press enter if no preference)').strip()
+        if not f:
+            time[4] = '1'
+        else:
+            time[4] = f
+    if freq >= 2:
+        f = input('On what hour of the day? (Please enter a number between [0, 23] or press enter if no preference)').strip()
+        while f and (not f.isdigit() or int(f) > 23 or int(freq) < 0):
+            print('Please input a number between 0 and 23 (inclusive).')
+            f = input('On what hour of the day? (Please enter a number between [0, 23] or press enter if no preference)').strip()
+        if not f and freq == 2:
+            time[4] = '*/1'
+        else:
+            time[1] = f
+    if freq == 1:
+        time[1] = '*/1'
+
+    job.setall(' '.join(time))
     # job.minute.every(2)
     cron.write()
 
-if __name__ == "__main__":
+    print('Cron job setup successful.')
 
+def setup(option = None):
     options = {
         "-g": setupGithub,
         "-c": getCookie,
         "-j": setCronJob
     }
 
-    if len(sys.argv) == 1:
+    if not option:
         setupGithub()
         getCookie()
         setCronJob()
         print()
-        print('You are all set! A cron job for pushing your leetcode solutions to github is set up to run at 12am everyday.')
-    elif len(sys.argv) >= 2:
-        options[sys.argv[-1]]()
+        print('You are all set!')
+    else:
+        options[option]()
+
+def run():
+    pass
+
+if __name__ == "__main__":
+
+    functions = {
+        "setup": setup,
+        "run": run
+    }
+
+    if len(sys.argv) >= 2:
+        functions[sys.argv[1]](sys.argv[2] if len(sys.argv) == 3 else None)
 
 
 
