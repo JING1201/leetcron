@@ -158,7 +158,22 @@ def setCronJob():
 def setup(option = None):
     #build config file
     if not os.path.exists(PATH+'config.json'):
-        os.rename(PATH+'config.example.json', PATH+'config.json')
+        if os.path.exists(PATH+'config.example.json'):
+            os.rename(PATH+'config.example.json', PATH+'config.json')
+        else:
+            data = {
+                "GITHUB": {
+                    "username": "", 
+                    "token": "", 
+                    "repo": ""
+                }, 
+                "LEETCODE_COOKIE": {
+                    "sessionID": "", 
+                    "sessionCSRF": ""
+                }
+            }
+            with open(PATH+"config.json", "w") as jsonFile:
+                json.dump(data, jsonFile)
     
     options = {
         "-g": setupGithub,
