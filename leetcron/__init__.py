@@ -29,13 +29,13 @@ def getCookie():
         print('Are you sure you are logged into leetcode in Chrome or Firefox?')
         return
     
-    with open(os.path.abspath("config.json"), "r") as jsonFile:
+    with open(PATH+"config.json", "r") as jsonFile:
         data = json.load(jsonFile)
 
     data["LEETCODE_COOKIE"]["sessionCSRF"] = sessionCSRF
     data["LEETCODE_COOKIE"]["sessionID"] = sessionID
 
-    with open(os.path.abspath("config.json"), "w") as jsonFile:
+    with open(PATH+"config.json", "w") as jsonFile:
         json.dump(data, jsonFile)
     
     print('Leetcode cookies saved.')
@@ -44,7 +44,7 @@ def setupGithub():
     """
     Set up tool with Github Key and Github repo name
     """
-    with open(os.path.abspath("config.json"), "r") as jsonFile:
+    with open(PATH+"config.json", "r") as jsonFile:
         data = json.load(jsonFile)
     
     username = input("Github Username: ")
@@ -92,7 +92,7 @@ def setupGithub():
     data["GITHUB"]["token"] = token
     data["GITHUB"]["repo"] = repo
 
-    with open(os.path.abspath("config.json"), "w") as jsonFile:
+    with open(PATH+"config.json", "w") as jsonFile:
         json.dump(data, jsonFile)
     
     print('Github setup successful.')
@@ -104,12 +104,12 @@ def setCronJob():
     cron = CronTab(user=getpass.getuser())
 
     found = False
-    for j in cron.find_command(sys.executable+" "+os.path.abspath("leetcode_to_github.py")): #need to get full path of file too
+    for j in cron.find_command(sys.executable+" "+PATH+"leetcode_to_github.py"): #need to get full path of file too
         found = True
         job = j
 
     if not found:
-        job = cron.new(command=sys.executable+" "+os.path.abspath("leetcode_to_github.py"))
+        job = cron.new(command=sys.executable+" "+PATH+"leetcode_to_github.py")
 
     time = ['*']*5
     time[0] = '0'

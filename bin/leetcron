@@ -5,8 +5,8 @@ import sys
 import leetcron
 
 functions = {
-    "setup": setup,
-    "run": run
+    "setup": leetcron.setup,
+    "run": leetcron.run
 }
 
 if len(sys.argv) >= 2:

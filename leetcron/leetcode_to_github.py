@@ -1,4 +1,3 @@
-import browsercookie
 import requests
 import os
 from github import Github
@@ -6,6 +5,10 @@ import json
 
 PATH, _ = os.path.split(os.path.realpath(__file__))
 PATH += '/'
+
+if not os.path.exists(PATH+'config.json'):
+    print('Config file not found. Have you run $leetcron setup ?')
+    exit()
 
 with open(PATH+"config.json", "r") as jsonFile:
     config = json.load(jsonFile)

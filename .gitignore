@@ -6,3 +6,7 @@ Testing Leetcode API.ipynb
 .ipynb_checkpoints
 bfg-1.13.0.jar
 dev
+dist
+dev_env
+__pycache__
+*.egg-info
