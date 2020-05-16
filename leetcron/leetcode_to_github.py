@@ -45,7 +45,10 @@ REPO_NAME = config["GITHUB"]['username']+"/"+config["GITHUB"]['repo']
 g = Github(GITHUB_TOKEN)
 
 repo = g.get_repo(REPO_NAME)
-lang_to_extension = {'python3':'.py'}
+lang_to_extension = {'python3':'.py', 'cpp':'.cpp', 'java':'.java', 'python':'.py',
+                    'c':'.c', 'csharp':'.cs', 'javascript':'.js', 'ruby':'.rb', 
+                    'swift':'.swift', 'golang':'.go', 'scala':'.scala', 'kotlin':'.kt',
+                    'rust':'.rs', 'php':'.php'}
 
 for sub in submissions:
     if sub['status_display'] == 'Accepted' and (sub['title'] not in question_timestamps or sub['timestamp'] > question_timestamps[sub['title']]):
