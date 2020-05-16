@@ -2,6 +2,9 @@
 
 A CLI tool for setting up a cron job that pushes recent leetcode submissions to a specified Github repo.
 
+### 0.0.6 Updates
+* Added support for uploading all file types (languages) supported on Leetcode
+
 ## Installation
 ```
 pip install leetcron
