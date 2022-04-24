@@ -6,7 +6,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setuptools.setup(name='leetcron',
-      version='0.0.6',
+      version='0.1.0',
       description='Sets up cron job that pushes Leetcode submissions to a Github repository',
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -14,6 +14,7 @@ setuptools.setup(name='leetcron',
       author='jlionwg',
       license='MIT',
       packages=setuptools.find_packages(),
+      python_requires='>=3.5', 
       install_requires=[
           'python-crontab',
           'browsercookie',
