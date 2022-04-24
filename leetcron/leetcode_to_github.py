@@ -48,19 +48,25 @@ repo = g.get_repo(REPO_NAME)
 lang_to_extension = {'python3':'.py', 'cpp':'.cpp', 'java':'.java', 'python':'.py',
                     'c':'.c', 'csharp':'.cs', 'javascript':'.js', 'ruby':'.rb', 
                     'swift':'.swift', 'golang':'.go', 'scala':'.scala', 'kotlin':'.kt',
-                    'rust':'.rs', 'php':'.php'}
+                    'rust':'.rs', 'php':'.php', 'typescript': '.ts', 'racket': '.rkt', 
+                    'erlang': '.erl', 'elixir': '.exs', 'bash': '.sh',
+                    'mysql': '.sql', 'mssql': '.sql', 'oraclesql': '.sql'}
 
 for sub in submissions:
     if sub['status_display'] == 'Accepted' and (sub['title'] not in question_timestamps or sub['timestamp'] > question_timestamps[sub['title']]):
-        filename = sub['title']+lang_to_extension[sub['lang']]
-        try:
-            contents = repo.get_contents(filename)
-            repo.update_file(contents.path, sub['title']+' '+str(sub['timestamp']), sub['code'], contents.sha)
-        except Exception:
-            repo.create_file(filename, sub['title']+' '+str(sub['timestamp']), sub['code'])
-        # keep track of timestamp in record
-        question_timestamps[sub['title']] = sub['timestamp']
-        print(filename, 'uploaded.')
+        # Only attempt to upload file if extension is recognized
+        if sub['lang'] in lang_to_extension:
+            filename = sub['title']+lang_to_extension[sub['lang']]
+            try:
+                contents = repo.get_contents(filename)
+                repo.update_file(contents.path, sub['title']+' '+str(sub['timestamp']), sub['code'], contents.sha)
+            except Exception:
+                repo.create_file(filename, sub['title']+' '+str(sub['timestamp']), sub['code'])
+            # keep track of timestamp in record
+            question_timestamps[sub['title']] = sub['timestamp']
+            print(filename, 'uploaded.')
+        else:
+            print('Question \'', sub['title'], '\' was not uploaded as language', sub['lang'], 'is not recognized.')
 
 with open(PATH+"question_timestamps.json", "w") as jsonFile:
     json.dump(question_timestamps, jsonFile)
